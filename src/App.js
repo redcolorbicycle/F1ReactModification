@@ -4,10 +4,6 @@ import SearchIcon from './search.svg';
 import DriverCard from './DriverCard';
 
 const API_URL = "https://ergast.com/api/f1/drivers";
-const RACE_WIN_URL = "/results/1";
-const PODIUM_URL_TWO = "/results/2";
-const PODIUM_URL_THREE = "/results/3";
-const CHAMPIONSHIP_URL = "/driverStandings/1"
 const API_JSON_CONVERTER = ".json?limit=100000";
 
 const App = () => {
@@ -19,19 +15,18 @@ const App = () => {
         const response = await fetch(`${API_URL}${API_JSON_CONVERTER}`);
         const data = await response.json();
         const matchingDrivers = [];
-
         data.MRData.DriverTable.Drivers.forEach((entry) => {
-            if (entry.driverId.toLowerCase().includes(name.toLowerCase())) {
+            if (entry.givenName.toLowerCase().includes(name.toLowerCase())
+                || entry.familyName.toLowerCase().includes(name.toLowerCase())
+                    || entry.driverId.toLowerCase().includes(name.toLowerCase())) {
                 matchingDrivers.push(entry);
             }
         });
-
         setDrivers(matchingDrivers);
-        console.log(drivers);
     }
-    useEffect(() => {
-        searchDrivers("verstappen");
 
+    useEffect(() => {
+        searchDrivers("Leclerc");
     }, []);
 
     return (
@@ -47,7 +42,7 @@ const App = () => {
                 <img
                     src={SearchIcon}
                     alt="search"
-                    onClick={() => searchDrivers(searchTerm)}
+                    onClick={() => searchDrivers(searchTerm.toLowerCase())}
                 />
             </div>
 
